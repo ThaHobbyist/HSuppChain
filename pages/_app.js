@@ -1,4 +1,4 @@
-import "@/styles/globals.css";
+import "../styles/globals.css";
 
 // Internal import
 import { TrackingProvider } from "../Context/Tracking";
@@ -8,10 +8,10 @@ export default function App({ Component, pageProps }) {
 	return (
 		<>
 			<TrackingProvider>
-			<NavBar />
+				<NavBar />
 				<Component {...pageProps} />
 			</TrackingProvider>
-			<Footer />	
+			<Footer />
 		</>
 	);
 }
