@@ -3,7 +3,7 @@ import Web3Modal from "web3modal";
 import { ethers } from "ethers";
 
 // Internal Imports
-import { tracking } from "../Context/Tracking.json";
+import tracking from "../Context/Tracking.json";
 const ContractAddress = "0x5fbdb2315678afecb367f032d93f642f64180aa3";
 const ContractABI = tracking.abi;
 
@@ -148,11 +148,11 @@ export const TrackingProvider = ({ children }) => {
 		}
 	};
 
-    const startShipment = async (getProduct) => {
-        const { recipient, index } = getProduct;
+	const startShipment = async (getProduct) => {
+		const { recipient, index } = getProduct;
 
-        try {
-            if (!window.ethereum) return "Install metamask extension!!";
+		try {
+			if (!window.ethereum) return "Install metamask extension!!";
 
 			const accounts = await window.ethereum.request({
 				method: "eth_accounts",
@@ -163,75 +163,76 @@ export const TrackingProvider = ({ children }) => {
 			const signer = provider.getSigner();
 			const contract = fetchContract(signer);
 
-            const shipment = await contract.startShipment(
-                accounts[0],
-                recipient,
-                index * 1,
+			const shipment = await contract.startShipment(
+				accounts[0],
+				recipient,
+				index * 1
+			);
 
-            );
+			shipment.wait();
 
-            shipment.wait()
+			console.log(shipment);
+		} catch (error) {
+			console.log("Something went wrong in starting Shipment", error);
+		}
+	};
 
-            console.log(shipment)
-        } catch(error){
-            console.log("Something went wrong in starting Shipment", error);
-        }
-    };
+	//--Check Wallet Connection
+	const checkIfWalletConnected = async () => {
+		try {
+			if (!window.ethereum) return "Install metamask extension!!";
 
-    //--Check Wallet Connection
-    const checkIfWalletConnected = async () => {
-        try{
-            if (!window.ethereum) return "Install metamask extension!!";
-
-            const accounts = await window.ethereum.request({
+			const accounts = await window.ethereum.request({
 				method: "eth_accounts",
 			});
 
-            if (accounts.length){
-                setCurrentUser(accounts[0]);
-            } else {
-                return "No Account";
-            }
-        } catch(error){
-            console.log("Something went wrong in checking Wallet Connection", error);
-        }
-    };
+			if (accounts.length) {
+				setCurrentUser(accounts[0]);
+			} else {
+				return "No Account";
+			}
+		} catch (error) {
+			console.log(
+				"Something went wrong in checking Wallet Connection",
+				error
+			);
+		}
+	};
 
-    //--Connect Wallet
-    const connectWallet = async () => {
-        try{
-            if (!window.ethereum) return "Install metamask extension!!";
+	//--Connect Wallet
+	const connectWallet = async () => {
+		try {
+			if (!window.ethereum) return "Install metamask extension!!";
 
-            const accounts = await window.ethereum.request({
-                method: "eth_requestAccounts", 
-            });
+			const accounts = await window.ethereum.request({
+				method: "eth_requestAccounts",
+			});
 
-            setCurrentUser(accounts[0]);
-        } catch(error){
-            console.log("Something went wrong in connecting Wallet", error);
-        }
-    };
+			setCurrentUser(accounts[0]);
+		} catch (error) {
+			console.log("Something went wrong in connecting Wallet", error);
+		}
+	};
 
-    useEffect(() => {
-        checkIfWalletConnected();
-    }, []);
+	useEffect(() => {
+		checkIfWalletConnected();
+	}, []);
 
-    return (
-        <TrackingContext.Provider
-            value={{
-                connectWallet,
-                createShipment, 
-                getAllShipments,
-                completeShipment,
-                getShipment,
-                getShipmentCount,
-                startShipment,
-                DappName,
-                currentUser,
-            }}
-        >
-            {children}
-        </TrackingContext.Provider>
-    ); 
-
+	return (
+		<TrackingContext.Provider
+			value={{
+				connectWallet,
+				createShipment,
+				getAllShipments,
+				completeShipment,
+				getShipment,
+				getShipmentCount,
+				startShipment,
+				DappName,
+				currentUser,
+			}}
+		>
+			{children}
+		</TrackingContext.Provider>
+	);
 };
