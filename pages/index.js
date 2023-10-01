@@ -21,7 +21,7 @@ const index = () => {
 		completeShipment,
 		getShipment,
 		startShipment,
-		getShipmentsCount,
+		getShipmentCount,
 	} = useContext(TrackingContext);
 
 	//State Variables
@@ -64,7 +64,7 @@ const index = () => {
 				openProfile={openProfile}
 				setOpenProfile={setOpenProfile}
 				currentUser={currentUser}
-				getShipmentsCount={getShipmentsCount}
+				getShipmentCount={getShipmentCount}
 			/>
 			<CompleteShipment
 				completeModal={completeModal}
